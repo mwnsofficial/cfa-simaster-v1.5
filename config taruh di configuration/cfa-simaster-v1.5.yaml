@@ -106,17 +106,7 @@ proxy-providers:
       interval: 99
 proxy-groups:
 - name: CFA-SIMASTER-V1.5
-  type: load-balance
-  strategy: round-robin
-  disable-udp: false
-  use:
-  - SIMASTER
-  url: http://www.gstatic.com/generate_204
-  interval: '99'
-- name: SIMASTER
-  type: load-balance
-  strategy: round-robin
-  disable-udp: false
+  type: fallback
   use:
   - SPECTRE
   url: http://www.gstatic.com/generate_204
@@ -125,7 +115,7 @@ proxy-groups:
   type: select
   disable-udp: false
   use:
-  - CFA-SIMASTER-V1.5
+  - SPECTRE
   - DIRECT
   url: http://www.gstatic.com/generate_204
   interval: '99'
