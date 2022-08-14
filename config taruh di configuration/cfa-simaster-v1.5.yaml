@@ -97,52 +97,35 @@ dns:
   - tls://1dot1dot1dot1.cloudflare-dns.com
   - tls://dns.google
 proxy-providers:
-  MASTER1:
+  SPECTRE:
     type: file
-    path: ./akun-master1.yaml
-    health-check:
-      enable: true
-      url: http://www.gstatic.com/generate_204
-      interval: 99
-  MASTER2:
-    type: file
-    path: ./akun-master2.yaml
+    path: ./akun-master.yaml
     health-check:
       enable: true
       url: http://www.gstatic.com/generate_204
       interval: 99
 proxy-groups:
-- name: SIMASTER-V1.5
+- name: CFA-SIMASTER-V1.5
   type: load-balance
   strategy: round-robin
   disable-udp: false
   use:
-  - WANA
-  - WANB
+  - SIMASTER
   url: http://www.gstatic.com/generate_204
   interval: '99'
-- name: WANA
+- name: SIMASTER
   type: load-balance
   strategy: round-robin
   disable-udp: false
-  proxies:
-  - MASTER1
-  url: http://www.gstatic.com/generate_204
-  interval: '99'
-- name: WANB
-  type: load-balance
-  strategy: round-robin
-  disable-udp: false
-  proxies:
-  - MASTER2
+  use:
+  - SPECTRE
   url: http://www.gstatic.com/generate_204
   interval: '99'
 - name: PORT-GAME
   type: select
   disable-udp: false
   use:
-  - SIMASTER-V1.5
-  proxies:
+  - CFA-SIMASTER-V1.5
   - DIRECT
   url: http://www.gstatic.com/generate_204
   interval: '99'
@@ -162,7 +145,7 @@ rule-providers:
 script:
   code: |
     def main(ctx, metadata):
-        ruleset_action = {"Master-Umum": "SIMASTER-V1.5",
+        ruleset_action = {"Master-Umum": "CFA-SIMASTER-V1.5",
             "Master-Direct": "DIRECT",
             "Master-Game": "PORT-GAME",
           }
@@ -171,8 +154,8 @@ script:
 
         if metadata["network"] == "UDP":
             if port == "20,21,22,23,25,53,80,81,123,443,853,5353,7100,7200,7300,7900,8000,8008,8080,8081,8090,8443,8888":
-                ctx.log('[Script] matched QUIC traffic use SIMASTER-V1.5')
-                return "SIMASTER-V1.5"
+                ctx.log('[Script] matched QUIC traffic use CFA-SIMASTER-V1.5')
+                return "CFA-SIMASTER-V1.5"
 
         if metadata["dst_ip"] == "":
             metadata["dst_ip"] = ctx.resolve_ip(metadata["host"])
@@ -183,7 +166,7 @@ script:
             return "PORT-GAME"
 
         if metadata["dst_ip"] == "":
-            return "SIMASTER-V1.5"
+            return "CFA-SIMASTER-V1.5"
 
         for ruleset in ruleset_action:
             if ctx.rule_providers[ruleset].match(metadata):
@@ -192,23 +175,23 @@ script:
         code = ctx.geoip(metadata["dst_ip"])
         if code == "ID":
             ctx.log('[Script] Geoip ID')
-            return "SIMASTER-V1.5"
+            return "CFA-SIMASTER-V1.5"
 
-        ctx.log('[Script] SIMASTER-V1.5')
-        return "SIMASTER-V1.5"
+        ctx.log('[Script] CFA-SIMASTER-V1.5')
+        return "CFA-SIMASTER-V1.5"
 rules:
 - IP-CIDR,198.18.0.1/16,REJECT,no-resolve
-- RULE-SET,Master-Umum,SIMASTER-V1.5
+- RULE-SET,Master-Umum,CFA-SIMASTER-V1.5
 - RULE-SET,Master-Direct,DIRECT
-- GEOIP,ID,SIMASTER-V1.5
-- MATCH,SIMASTER-V1.5
+- GEOIP,ID,CFA-SIMASTER-V1.5
+- MATCH,CFA-SIMASTER-V1.5
 tun:
   enable: true
   stack: system
-  auto-route: true
-  auto-detect-interface: true
-  macOS-auto-route: true
-  macOS-auto-detect-interface: true
+  auto-route: false
+  auto-detect-interface: false
+  macOS-auto-route: false
+  macOS-auto-detect-interface: false
   dns-hijack:
   - any:53
   - tcp://any:53
