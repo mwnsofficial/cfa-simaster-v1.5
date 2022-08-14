@@ -1,0 +1,14 @@
+proxies:
+- name: MASTER2
+  server: insert-sni.com
+  port: 443
+  type: trojan
+  password: 8ae96ce0-1bfd-11ed-a394-1239d0255272
+  sni: id5-trojan.bonds.id
+  skip-cert-verify: true
+  udp: true
+  network: ws
+  ws-opts:
+    path: /howdy
+    headers:
+      Host: id5-trojan.bonds.id
