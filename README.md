@@ -7,7 +7,7 @@ khusus android, keterangan sudah ada di tiap folder
 > TETAP HARGAI KARYA MASTERWIFI DENGAN CARA LIKE, KOMEN, DAN SUBSCRIBE CHANNEL YOUTUBE Master Wi-Fi Network Solution
 > YANG INGIN DONASI SILAHKAN MELALUI SHOPEEPAY 087737659957
 > ATAU BISA MELALUI TRANSFER BANK KE BRI 453401017095532 an MUHAMMAD YUSUF
-> JANGAN LUPA KUNJUNGI WEB RESMI DI https://www.masterwifinetworksolution.tech
+> JANGAN LUPA KUNJUNGI WEB RESMI [DISINI](https://masterwifinetworksolution.tech)
 
 
 ## Download file
